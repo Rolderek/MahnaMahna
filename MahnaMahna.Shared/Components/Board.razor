@@ -1,0 +1,121 @@
+@page "/board"
+@inject ITodoApiService _api
+@inject NavigationManager _manager
+@inject INotificationService _notificationService
+@implements IDisposable
+
+<SectionContent SectionId="MainLayout.TopRow">
+    <AddNewTodo />    
+</SectionContent>
+
+<div>
+    <div class="categorybuttons">
+        @foreach (var category in Categories)
+        {
+            <button type="button" class="btn position-relative @(CategoriesFilter.Any(c=>c.Id==category.Id)?"selected":"")" @onclick="@(()=>UpdateFilter(category))">
+                @category.Name
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">
+                    @TodoItems.Where(i => i.Categories != null && i.Categories.Any(c => c.Id == category.Id)).Count()
+                </span>
+            </button>
+        }
+    </div>
+    <SvgCheckboxResources />
+    <Row GridTemplateColumns="1fr 1fr 1fr 1fr">
+        @foreach (var state in Enum.GetValues(typeof(TodoItemState)).Cast<TodoItemState>())
+        {
+            <div class="grid-item">
+                <h2>@state</h2>
+                <div class="box statecolumn todo-list">
+                    <SortableList class="list" Id="@state.ToString()" Group="sharedLists" Items="TodoItemsFiltered.Where(i => i.State == state).ToList()" Context="item" T="TodoItem" OnRemove="ListRemoveAsync">
+                        <SortableItemTemplate>
+                            <div class="todo" id="@item.Id">
+                                <SvgCheckbox @bind-Value:get="@(item.State==TodoItemState.Completed)"
+                                             @bind-Value:set="@((value)=>ChangeStatusAsync(item,value))"
+                                             Url="@($"/items/{item.Id}")">
+                                    @item.Text
+                                </SvgCheckbox>
+                            </div>
+                        </SortableItemTemplate>
+                    </SortableList>
+                </div>
+            </div>
+        }
+    </Row>
+</div>
+@code {
+    private List<TodoItem> TodoItems { get; set; } = new();
+
+    private List<TodoItem> TodoItemsFiltered =>
+        CategoriesFilter.Count == 0
+            ? TodoItems
+            : TodoItems.Where(item => CategoriesFilter.All(filterCategory =>
+                                                        item.Categories.Any(i =>
+                                                            i.Id == filterCategory.Id)))
+                       .ToList();
+
+    private List<Category> Categories { get; set; } = new();
+
+    private List<Category> CategoriesFilter { get; set; } = new();
+
+    override protected async Task OnInitializedAsync()
+    {
+        TodoItems = (await _api.GetTodoItemsAsync()).ToList();
+        Categories = (await _api.GetCategoriesAsync()).ToList();
+        _notificationService.TodoChanged += OnTodoChanged;
+    }
+
+    public void UpdateFilter(Category category)
+    {
+        if (CategoriesFilter.Contains(category))
+        {
+            CategoriesFilter.Remove(category);
+        }
+        else
+        {
+            CategoriesFilter.Add(category);
+        }
+        StateHasChanged();
+    }
+
+    private void OnTodoChanged(TodoItem todoItem)
+    {
+        var existingItem = TodoItems.FirstOrDefault(i => i.Id == todoItem.Id);
+        if (existingItem != null)
+        {
+            existingItem.Text = todoItem.Text;
+            existingItem.State = todoItem.State;
+            existingItem.Categories = todoItem.Categories;
+        }
+        else
+        {
+            TodoItems.Add(todoItem);
+        }
+        StateHasChanged();
+    }
+
+    private async Task ListRemoveAsync((int oldIndex, int newIndex, TodoItem item, string target) args)
+    {
+        var state = Enum.Parse<TodoItemState>(args.target);
+        args.item.State = state;
+        await ChangeStatusAsync(args.item);
+    }
+
+    void IDisposable.Dispose()
+    {
+        _notificationService.TodoChanged -= OnTodoChanged;
+    }
+
+    private async Task ChangeStatusAsync(TodoItem item, bool? value = null)
+    {
+        if (value != null)
+        {
+            item.State = value.Value ? TodoItemState.Completed : TodoItemState.Pending;
+        }
+        await _api.UpdateTodoItemAsync(item);
+    }
+}
+
+
+
+

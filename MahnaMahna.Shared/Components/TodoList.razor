@@ -1,0 +1,72 @@
+@page "/List"
+@inject ITodoApiService _api
+@inject INotificationService _notificationService
+@implements IDisposable
+<SvgCheckboxResources />
+
+<div class="progress-circle" style="--progress: @Progress; --size: 100px; --stroke: 10;">
+    <svg viewBox="0 0 100 100">
+        <circle class="progress-circle__circle" cx="50" cy="50" r="45"></circle>
+        <circle class="progress-circle__progress" cx="50" cy="50" r="45"></circle>
+    </svg>
+    <div class="progress-circle__text">@Progress%</div>
+</div>
+
+
+<div class="todo-list box">
+    <AddNewTodo  /> 
+
+
+    @foreach (var item in TodoItems)
+    {
+        <div class="todo">
+            <SvgCheckbox @bind-Value:get="@(item.State==TodoItemState.Completed)"
+                         @bind-Value:set="@((value)=>ChangeStatusAsync(item,value))"
+                         Url="@($"/items/{item.Id}")">
+                @item.Text
+            </SvgCheckbox>
+        </div>
+
+    }
+
+</div>
+
+
+@code {
+    private List<TodoItem> TodoItems { get; set; } = new List<TodoItem>();
+    private int Progress => TodoItems.Count() == 0 ? 0 : 100 - (@TodoItems.Count(i => i.State != TodoItemState.Completed) * 100) / TodoItems.Count();
+    protected async override Task OnInitializedAsync()
+    {
+        TodoItems = (await _api.GetTodoItemsAsync()).ToList();
+        _notificationService.TodoChanged += OnTodoChanged;
+       
+        await base.OnInitializedAsync();
+    }
+    
+    private void OnTodoChanged(TodoItem todoItem)
+    {
+        var existingItem = TodoItems.FirstOrDefault(i => i.Id == todoItem.Id);
+        if (existingItem != null)
+        {
+            existingItem.Text = todoItem.Text;
+            existingItem.State = todoItem.State;
+            existingItem.Categories = todoItem.Categories;
+        }
+        else
+        {
+            TodoItems.Add(todoItem);
+        }
+        StateHasChanged();
+    }
+
+    private async Task ChangeStatusAsync(TodoItem item, bool value)
+    {
+        item.State = value ? TodoItemState.Completed : TodoItemState.Pending;
+        await _api.UpdateTodoItemAsync(item);
+    }
+
+    void IDisposable.Dispose()
+    {
+        _notificationService.TodoChanged -= OnTodoChanged;
+    }
+}

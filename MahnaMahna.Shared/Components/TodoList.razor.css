@@ -1,0 +1,53 @@
+/*This is inpired by https://codepen.io/shshaw/pen/WXMdwEc */
+.todo-list {
+    margin: auto;
+}
+
+.todo:last-child {
+    border-bottom: none;
+}
+
+.progress-circle {
+    display: block;
+    margin: auto auto 20px auto;
+    position: relative;
+    width: var(--size);
+    height: var(--size);
+}
+
+    .progress-circle svg {
+        transform: rotate(-90deg);
+        width: 100%;
+        height: 100%;
+    }
+
+.progress-circle__circle,
+.progress-circle__progress {
+    fill: none;
+    stroke-width: var(--stroke);
+    cx: 50;
+    cy: 50;
+    r: 45;
+}
+
+.progress-circle__circle {
+    stroke: var(--secondary-color);
+}
+
+.progress-circle__progress {
+    stroke: #e6e6e6;
+    stroke-dasharray: 283;
+    stroke-dashoffset: calc(283 * (var(--progress) / 100));
+    transition: stroke-dashoffset 0.35s;
+    transform: rotate(0deg);
+    transform-origin: 50% 50%;
+}
+
+.progress-circle__text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: calc(var(--size) * 0.2);
+    font-weight: bold;
+}

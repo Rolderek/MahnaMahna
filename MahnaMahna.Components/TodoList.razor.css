@@ -1,0 +1,86 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #FF69B4; /* Hot pink background to match Mahna Mahna's vibe */
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #8A2BE2; /* Blue-violet for contrast */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.todo-input {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+    .todo-input input {
+        width: 70%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+    }
+
+    .todo-input button {
+        width: 25%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #32CD32; /* Lime green button */
+        color: #FFFFFF;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .todo-input button:hover {
+            background-color: #228B22; /* Darker green on hover */
+        }
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #FF4500; /* Orange-red task items */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    li span {
+        flex-grow: 1;
+    }
+
+    li button {
+        background-color: #FF6347; /* Tomato color for delete button */
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: #FFFFFF;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        li button:hover {
+            background-color: #FF4500; /* Darker red on hover */
+        }

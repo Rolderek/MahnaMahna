@@ -1,0 +1,45 @@
+@inject NavigationManager navmanager
+<article class="todo-item">
+    <input class="todostate" type="checkbox" @bind="Value" />
+    
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 25" class="todoicon">
+        <use xlink:href="#todoline" class="todoline"></use>
+        <use xlink:href="#todobox" class="todobox"></use>
+        <use xlink:href="#todocheck" class="todocheck"></use>
+        <use xlink:href="#todocircle" class="todocircle"></use>
+    </svg>
+    <div class="clicktarget" @onclick="@UpdateValue"></div>
+    <div class="todotext" @onclick="@NavigateToUrl">
+        @ChildContent
+    </div>
+</article>
+
+
+@code {
+    [Parameter] 
+    public bool Value { get; set; }
+
+    [Parameter] 
+    public EventCallback<bool> ValueChanged { get; set; }
+
+    [Parameter] 
+    public required RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Url { get; set; }
+
+
+    private async Task UpdateValue()
+    {
+        Value = !Value;
+        await ValueChanged.InvokeAsync(Value);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void NavigateToUrl()
+    {
+        navmanager.NavigateTo(Url);
+    }
+
+
+}

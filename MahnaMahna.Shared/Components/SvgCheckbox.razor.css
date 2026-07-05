@@ -1,0 +1,113 @@
+.todoicon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    margin: auto;
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.todoline,
+.todobox,
+.todocheck {
+    transition: stroke-dashoffset 0.8s cubic-bezier(.9, .0, .5, 1);
+}
+
+.todocircle {
+    stroke: var(--primary-color);
+    stroke-dasharray: 1 6;
+    stroke-width: 0;
+    transform-origin: 13.5px 12.5px;
+    transform: scale(0.4) rotate(0deg);
+    animation: none 0.8s linear;
+}
+
+.todobox {
+    stroke-dasharray: 56.1053, 56.1053;
+    stroke-dashoffset: 0;
+    transition-delay: 0.16s;
+}
+
+.todocheck {
+    stroke: var(--primary-color);
+    stroke-dasharray: 9.8995, 9.8995;
+    stroke-dashoffset: 9.8995;
+    transition-duration: 0.32s;
+}
+
+.todoline {
+    stroke-dasharray: 168, 1684;
+    stroke-dashoffset: 168;
+}
+
+.todocircle {
+    animation-delay: 0.56s;
+    animation-duration: 0.56s;
+}
+
+.todostate:checked ~ .todotext {
+    transition-delay: 0s;
+    color: var(--checked-text-color);
+    opacity: 0.6;
+}
+
+.todostate:checked ~ .todoicon .todobox {
+    stroke-dashoffset: 56.1053;
+    transition-delay: 0s;
+}
+
+.todostate:checked ~ .todoicon .todoline {
+    stroke-dashoffset: -8;
+}
+
+.todostate:checked ~ .todoicon .todocheck {
+    stroke-dashoffset: 0;
+    transition-delay: 0.48s;
+}
+
+.todostate:checked ~ .todoicon .todocircle {
+    animation-name: explode;
+}
+
+.todo-list input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+
+
+.clicktarget {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width:50px;
+    padding:0;
+    margin:0;
+    height: 100%;
+    cursor: pointer;
+}
+.urltarget {
+    position: absolute;
+    top: 0;
+    left: 50px;
+    width: 100%;
+    height:50px;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    cursor: pointer;
+}
+
+
+.todotext {
+    color: var(--text-color);
+    position: relative;
+    cursor: pointer;
+}

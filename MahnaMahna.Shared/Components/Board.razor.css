@@ -1,0 +1,34 @@
+.statecolumn {
+    min-height:80vh;
+}
+
+.todo {
+    background-color: white;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+::deep .list {
+    min-height: 80vh;
+}
+
+.categorybuttons{
+    display: flex;
+    justify-content:flex-start;
+    gap:15px;
+    
+}
+
+button {
+    cursor: pointer;
+    background: linear-gradient(35deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    padding: 0.5em 1em;
+    color: var(--text-color);
+}
+
+.selected{
+    background: linear-gradient(35deg, var(--secondary-color), var(--primary-color));
+    border:1px solid black
+}

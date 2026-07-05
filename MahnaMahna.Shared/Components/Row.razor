@@ -1,0 +1,43 @@
+﻿<div class="grid-container" style="grid-template-columns:@GridTemplateColumns">
+    
+    @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+    @if (Column1Content != null)
+    {
+        <div class="grid-item">
+            @Column1Content
+        </div>
+    }
+    @if (Column2Content != null)
+    {
+        <div class="grid-item">
+            @Column2Content
+        </div>
+    }
+    @if (Column3Content != null)
+    {
+        <div class="grid-item">
+            @Column3Content
+        </div>
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public string GridTemplateColumns { get; set; } = "1fr 1fr";
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? Column1Content { get; set; }
+
+    [Parameter]
+    public RenderFragment? Column2Content { get; set; }
+
+    [Parameter]
+    public RenderFragment? Column3Content { get; set; }
+}
