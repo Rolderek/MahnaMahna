@@ -48,7 +48,7 @@ public class TodoItemService : ITodoItemService
     {
         using var context = _contextFactory.CreateDbContext();
 
-        // Fetch existing TodoItem with related Categories
+        // elemek - kategóriá fetchelése
         var existingItem = await context.TodoItems
             .Include(t => t.Categories)
             .FirstOrDefaultAsync(t => t.Id == item.Id);
@@ -59,11 +59,11 @@ public class TodoItemService : ITodoItemService
             throw new KeyNotFoundException("TodoItem not found");
         }
 
-        // Update scalar properties
+        // scalar update
         existingItem.Text = item.Text;
         existingItem.State = item.State;
 
-        // Update Categories
+        // KAtegória update
         existingItem.Categories.Clear();
         if (item.Categories!=null)
         {

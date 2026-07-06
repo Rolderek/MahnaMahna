@@ -42,7 +42,7 @@ public class TodoApiService : ITodoApiService
         PropertyNameCaseInsensitive = true
     };
 
-    // TodoItem metódusai (ellenőrizni hogy minden meg van csinálva rendesen!
+    // TodoItem metódusai (ellenőrizni hogy minden meg van csinálva rendesen!)
     public async Task<List<TodoItem>> GetTodoItemsAsync()
     {
         return (await _httpClient.GetFromJsonAsync<IEnumerable<TodoItem>>("/api/todos", options))?.ToList() ?? new List<TodoItem>();
